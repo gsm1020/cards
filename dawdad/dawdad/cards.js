@@ -1,29 +1,51 @@
-var deck = ["2 Heart", "3 Heart", "4 Heart", "5 Heart",
-            "2 Spade", "3 Spade", "4 Spade", "5 Spade",
-            "2 Club", "3 Club", "4 Club", "5 Club",
-            "2 Diamond", "3 Diamond", "4 Diamond", "5 Diamond"];
+const suits = [ 'Hearts', 'Diamonds', 'Spades', 'Clubs' ];
+const nums = [ ...new Array(9) ].map((_, i) => String(i + 2));
+const faces = [ 'J', 'Q', 'K', 'A' ];
 
-var chosenCards = [];
+const allValues = [ ...nums, ...faces ];
+
+// key = suit, value = remaining cards
+const remainingCards = {};
 
 
-function shuffleDeck(array) {
-    array = chosenCards;
-    array.sort(function(a, b) {return 0.5 - Math.random()});
-    return array
+const shuffleCards = () => {
+    suits.forEach(suit => {
+        remainingCards[suit] = allValues;
+    });
 }
 
+shuffleCards();
 
-function drawCard() {
-    var randomNum = Math.floor(Math.random() * deck.length);
-    var card = deck[randomNum];
-    deck.splice(randomNum, 1);
-    if (deck.length === 0) {
-        deck = chosenCards;
-        chosenCards = []
-        return console.log("cards shuffled, draw again.");
-    } else {
-        chosenCards.unshift(card);
-        return console.log(chosenCards[0]);
+const drawCard = () => {
+    const remainingSuits = Object.keys(remainingCards);
+    if (remainingSuits.length === 0) {
+        console.log('All cards drawn!');
+        console.log('Shuffling...');
+
+        shuffleCards();
+        console.log('Cards shuffled!');
+        return;
     }
+    const suitIndex = Math.floor(Math.random() * remainingSuits.length);
+    const drawnSuit = remainingSuits[suitIndex];
+
+    const valueIndex = Math.floor(Math.random() * remainingCards[drawnSuit].length);
+    const drawnValue = remainingCards[drawnSuit][valueIndex];
+
+    const drawnCard = `${drawnValue} of ${drawnSuit}`;
+
+    // cleanup
+    remainingCards[drawnSuit] = [
+        ...remainingCards[drawnSuit].slice(0, valueIndex),
+        ...remainingCards[drawnSuit].slice(valueIndex + 1)
+    ];
+
+    if (remainingCards[drawnSuit].length === 0) {
+        delete remainingCards[drawnSuit];
+    }
+
+    console.log(drawnCard);
 }
 
+const drawButton = document.getElementById('drawButton');
+drawButton.addEventListener('click', drawCard);
