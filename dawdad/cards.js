@@ -5,28 +5,17 @@ var deck = ["2 Heart", "3 Heart", "4 Heart", "5 Heart",
 
 var chosenCards = [];
 
-
-function number() {
-    return Math.floor(Math.random() * deck.length);
-}
-
-
-function shuffleDeck(array) {
-    array.sort(function(a, b) {return 0.5 - Math.random()});
-
-    deck = chosenCards
-}
-
-
 function drawCard() {
-    var randomNum = number();
-    var card = deck.splice(randomNum, 1);
+    var randomNum = Math.floor(Math.random() * deck.length);
+    var card = deck[randomNum];
+    deck.splice(randomNum, 1);
     if (deck.length === 0) {
         deck = chosenCards;
-        shuffleDeck(deck);
-        return console.log("cards shuffled, draw again.")
+        chosenCards = []
+        return console.log("cards shuffled, draw again.");
     } else {
-        chosenCards.push(card);
+        chosenCards.unshift(card);
         return console.log(chosenCards[0]);
     }
 }
+
