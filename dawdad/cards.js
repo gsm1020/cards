@@ -20,13 +20,13 @@ function shuffleDeck(array) {
 
 function drawCard() {
     var randomNum = number();
-
-    if (deck === null) {
+    var card = deck.splice(randomNum, 1);
+    if (deck.length === 0) {
         deck = chosenCards;
         shuffleDeck(deck);
         return console.log("cards shuffled, draw again.")
     } else {
-        chosenCards.push(deck.splice(randomNum, 1))
+        chosenCards.push(card);
         return console.log(chosenCards[0]);
     }
 }
